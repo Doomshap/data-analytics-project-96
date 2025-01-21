@@ -6,8 +6,7 @@ left join leads
 on sessions.visitor_id = leads.visitor_id
 and sessions.visit_date <= leads.created_at
 where medium != 'organic'
-order by sessions.visitor_id, visit_date desc
-),
+order by sessions.visitor_id, visit_date desc),
 
 tab as
 (select utm_source, utm_medium, utm_campaign, cast(campaign_date as date) as campaign_date,
