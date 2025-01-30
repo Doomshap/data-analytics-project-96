@@ -1,19 +1,47 @@
-with tab as(
-select
-sessions.visitor_id, visit_date, source as utm_source, medium as utm_medium, campaign as utm_campaign,
-lead_id, created_at, amount, closing_reason, status_id
-from sessions
-left join leads on leads.visitor_id=sessions.visitor_id and visit_date<created_at
-where medium != 'organic'),
+WITH tab AS (
+    SELECT
+        sessions.visitor_id,
+        sessions.visit_date,
+        sessions.source AS utm_source,
+        sessions.medium AS utm_medium,
+        sessions.campaign AS utm_campaign,
+        leads.lead_id,
+        leads.created_at,
+        leads.amount,
+        leads.closing_reason,
+        leads.status_id
+    FROM sessions
+    LEFT JOIN leads 
+        ON leads.visitor_id = sessions.visitor_id 
+        AND sessions.visit_date < leads.created_at
+    WHERE sessions.medium != 'organic'
+),
 
-tab2 as(
-select *,
-row_number() over(partition by tab.visitor_id order by visit_date desc) as rang
-from tab
-order by visit_date desc)
+ tab2 AS (
+    SELECT
+        tab.*,
+        ROW_NUMBER() OVER (PARTITION BY tab.visitor_id ORDER BY tab.visit_date DESC) AS rang
+    FROM tab
+    ORDER BY tab.visit_date DESC
+)
 
-select visitor_id, visit_date, utm_source, utm_medium, utm_campaign,
-lead_id, created_at, amount, closing_reason, status_id
-from tab2 where rang=1
-order by amount desc NULLS last, visit_date, utm_source, utm_medium, utm_campaign
-limit 10;
+SELECT
+    tab2.visitor_id,
+    tab2.visit_date,
+    tab2.utm_source,
+    tab2.utm_medium,
+    tab2.utm_campaign,
+    tab2.lead_id,
+    tab2.created_at,
+    tab2.amount,
+    tab2.closing_reason,
+    tab2.status_id
+FROM tab2
+WHERE tab2.rang = 1
+ORDER BY
+    tab2.amount DESC NULLS LAST,
+    tab2.visit_date ASC,
+    tab2.utm_source ASC,
+    tab2.utm_medium ASC,
+    tab2.utm_campaign ASC
+LIMIT 10;
