@@ -11,9 +11,10 @@ WITH tab AS (
         leads.closing_reason,
         leads.status_id
     FROM sessions
-    LEFT JOIN leads 
-        ON leads.visitor_id = sessions.visitor_id 
-        AND sessions.visit_date < leads.created_at
+    LEFT JOIN leads
+        ON
+            leads.visitor_id = sessions.visitor_id
+            AND sessions.visit_date < leads.created_at
     WHERE sessions.medium != 'organic'
 ),
 
