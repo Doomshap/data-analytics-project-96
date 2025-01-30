@@ -1,38 +1,42 @@
-with tab as (
-    select
+WITH tab AS (
+    SELECT
         s.visitor_id,
-        max(visit_date) as mx_visit 
-    from sessions as s 
-    left join leads as l 
-        on s.visitor_id = l.visitor_id 
-    where s.medium <> 'organic'
-    group by 1
+        MAX(s.visit_date) AS mx_visit
+    FROM sessions AS s
+    LEFT JOIN leads AS l
+        ON s.visitor_id = l.visitor_id
+    WHERE s.medium != 'organic'
+    GROUP BY s.visitor_id
+),
+
+tab2 AS (
+    SELECT
+        s.visit_date,
+        l.lead_id,
+        l.created_at,
+        l.closing_reason,
+        l.status_id
+    FROM tab AS t
+    INNER JOIN sessions AS s
+        ON t.visitor_id = s.visitor_id
+        AND t.mx_visit = s.visit_date
+    LEFT JOIN leads AS l
+        ON t.visitor_id = l.visitor_id
+        AND t.mx_visit <= l.created_at
+    WHERE s.medium != 'organic'
+        AND l.status_id = 142
+),
+
+tab3 AS (
+    SELECT
+        (l.created_at - s.visit_date) AS diff_days,
+        l.lead_id
+    FROM tab2
+    ORDER BY (l.created_at - s.visit_date)
 )
-, tab2 as (
-select
-    s.visit_date,
-    lead_id,
-    l.created_at,
-    closing_reason, 
-    status_id 
-from tab as t
-inner join sessions as s
-    on
-        t.visitor_id = s.visitor_id
-        and t.mx_visit = s.visit_date
-left join leads as l 
-    on
-        t.visitor_id = l.visitor_id
-        and t.mx_visit <= l.created_at
-where medium <> 'organic' 
-and status_id  = 142
-), tab3 as (
-select 
-    (created_at-visit_date) as diff_days,
-    lead_id
-from tab2
-order by (created_at-visit_date)
-)
-select 
-    percentile_disc(0.9) within group (order by date_trunc('day', created_at - visit_date))
-from tab2;
+
+SELECT
+    PERCENTILE_DISC(0.9) WITHIN GROUP (
+        ORDER BY DATE_TRUNC('day', l.created_at - s.visit_date)
+    )
+FROM tab2;
