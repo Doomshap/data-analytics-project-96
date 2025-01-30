@@ -63,18 +63,18 @@ tab2 AS (
         SUM(tab1.amount) FILTER (WHERE tab1.status_id = 142) AS revenue
     FROM tab1
     GROUP BY
-        CAST(tab1.visit_date AS DATE),
         tab1.source,
         tab1.medium,
-        tab1.campaign       
+        tab1.campaign,
+        CAST(tab1.visit_date AS DATE)
 )
 
 SELECT
     TO_CHAR(tab2.visit_date, 'YYYY-MM-DD') AS visit_date,
-    tab2.visitors_count,
     tab2.source AS utm_source,
     tab2.medium AS utm_medium,
     tab2.campaign AS utm_campaign,
+    tab2.visitors_count,
     tab.total_cost,
     tab2.leads_count,
     tab2.purchases_count,
