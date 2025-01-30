@@ -25,16 +25,9 @@ tab2 AS (
         ON
             t.visitor_id = l.visitor_id
             AND t.mx_visit <= l.created_at
-    WHERE s.medium != 'organic'
+    WHERE
+        s.medium != 'organic'
         AND l.status_id = 142
-),
-
-tab3 AS (
-    SELECT
-        (l.created_at - s.visit_date) AS diff_days,
-        l.lead_id
-    FROM tab2
-    ORDER BY (l.created_at - s.visit_date)
 )
 
 SELECT
