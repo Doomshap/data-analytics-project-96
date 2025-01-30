@@ -18,11 +18,13 @@ tab2 AS (
         l.status_id
     FROM tab AS t
     INNER JOIN sessions AS s
-        ON t.visitor_id = s.visitor_id
-        AND t.mx_visit = s.visit_date
+        ON
+            t.visitor_id = s.visitor_id
+            AND t.mx_visit = s.visit_date
     LEFT JOIN leads AS l
-        ON t.visitor_id = l.visitor_id
-        AND t.mx_visit <= l.created_at
+        ON
+            t.visitor_id = l.visitor_id
+            AND t.mx_visit <= l.created_at
     WHERE s.medium != 'organic'
         AND l.status_id = 142
 ),
