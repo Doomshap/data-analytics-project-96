@@ -1,23 +1,23 @@
 WITH tab1 AS (
     SELECT DISTINCT ON (sessions.visitor_id)
-        sessions.visitor_id,
-        sessions.visit_date,
-        leads.created_at,
-        leads.status_id,
-        leads.amount,
-        leads.lead_id,
-        leads.closing_reason,
-        sessions.medium,
-        sessions.source,
-        sessions.campaign
-    FROM sessions
-    LEFT JOIN leads
-        ON sessions.visitor_id = leads.visitor_id
-        AND sessions.visit_date <= leads.created_at
-    WHERE sessions.medium != 'organic'
-    ORDER BY
-        sessions.visitor_id,
-        sessions.visit_date DESC
+            sessions.visitor_id,
+            sessions.visit_date,
+            leads.created_at,
+            leads.status_id,
+            leads.amount,
+            leads.lead_id,
+            leads.closing_reason,
+            sessions.medium,
+            sessions.source,
+            sessions.campaign
+        FROM sessions
+        LEFT JOIN leads
+            ON sessions.visitor_id = leads.visitor_id
+            AND sessions.visit_date <= leads.created_at
+        WHERE sessions.medium != 'organic'
+        ORDER BY
+            sessions.visitor_id,
+            sessions.visit_date DESC
 ),
 
 tab AS (
@@ -28,10 +28,10 @@ tab AS (
         CAST(campaign_date AS DATE) AS campaign_date,
         SUM(daily_spent) AS total_cost
     FROM vk_ads
-    GROUP BY 1, 2, 3, 4
-    
+    GROUP BY utm_source, utm_medium, utm_campaign, campaign_date
+
     UNION
-    
+
     SELECT
         utm_source,
         utm_medium,
@@ -39,7 +39,7 @@ tab AS (
         CAST(campaign_date AS DATE) AS campaign_date,
         SUM(daily_spent) AS total_cost
     FROM ya_ads
-    GROUP BY 1, 2, 3, 4
+    GROUP BY utm_source, utm_medium, utm_campaign, campaign_date
 ),
 
 tab2 AS (
@@ -87,4 +87,3 @@ ORDER BY
     tab2.medium ASC,
     tab2.campaign ASC
 LIMIT 15;
-
