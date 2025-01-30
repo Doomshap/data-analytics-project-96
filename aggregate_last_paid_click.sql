@@ -58,8 +58,10 @@ tab2 AS (
         tab1.campaign,
         CAST(tab1.visit_date AS DATE) AS visit_date,
         COUNT(tab1.visitor_id) AS visitors_count,
-        COUNT(tab1.visitor_id) FILTER (WHERE tab1.created_at IS NOT NULL) AS leads_count,
-        COUNT(tab1.visitor_id) FILTER (WHERE tab1.status_id = 142) AS purchases_count,
+        COUNT(tab1.visitor_id) FILTER (WHERE tab1.created_at IS NOT NULL)
+            AS leads_count,
+        COUNT(tab1.visitor_id) FILTER (WHERE tab1.status_id = 142)
+            AS purchases_count,
         SUM(tab1.amount) FILTER (WHERE tab1.status_id = 142) AS revenue
     FROM tab1
     GROUP BY
