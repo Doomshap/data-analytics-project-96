@@ -32,6 +32,6 @@ tab2 AS (
 
 SELECT
     PERCENTILE_DISC(0.9) WITHIN GROUP (
-        ORDER BY DATE_TRUNC('day', l.created_at - s.visit_date)
+        ORDER BY DATE_TRUNC('day', tab2.created_at - tab2.visit_date)
     )
 FROM tab2;
