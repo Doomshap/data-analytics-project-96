@@ -22,7 +22,7 @@ tab2 AS (
     SELECT
         tab.*,
         ROW_NUMBER() OVER
-            (PARTITION BY tab.visitor_id ORDER BY tab.visit_date DESC) AS rang
+        (PARTITION BY tab.visitor_id ORDER BY tab.visit_date DESC) AS rang
     FROM tab
     ORDER BY tab.visit_date DESC
 )
