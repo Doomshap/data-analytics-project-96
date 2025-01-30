@@ -1,23 +1,23 @@
 with tab1 as (
-    select distinct on (sessions.visitor_id)
-        sessions.visitor_id,
-        sessions.visit_date,
-        leads.created_at,
-        leads.status_id,
-        leads.amount,
-        leads.lead_id,
-        leads.closing_reason,
-        sessions.medium,
-        sessions.source,
-        sessions.campaign
-    from sessions
-    left join leads
-        on sessions.visitor_id = leads.visitor_id
-        and sessions.visit_date <= leads.created_at
-    where sessions.medium != 'organic'
-    order by
-        sessions.visitor_id,
-        sessions.visit_date desc
+            select distinct on (sessions.visitor_id)
+                sessions.visitor_id,
+                sessions.visit_date,
+                leads.created_at,
+                leads.status_id,
+                leads.amount,
+                leads.lead_id,
+                leads.closing_reason,
+                sessions.medium,
+                sessions.source,
+                sessions.campaign
+            from sessions
+            left join leads
+                on sessions.visitor_id = leads.visitor_id
+                and sessions.visit_date <= leads.created_at
+            where sessions.medium != 'organic'
+            order by
+                sessions.visitor_id asc,
+                sessions.visit_date desc
 ),
 
 tab as (
@@ -29,7 +29,10 @@ tab as (
         sum(daily_spent) as total_cost
     from vk_ads
     group by
-        1, 2, 3, 4
+        utm_source,
+        utm_medium,
+        utm_campaign,
+        campaign_date
     union
     select
         utm_source,
@@ -39,7 +42,10 @@ tab as (
         sum(daily_spent) as total_cost
     from ya_ads
     group by
-        1, 2, 3, 4
+        utm_source,
+        utm_medium,
+        utm_campaign,
+        campaign_date
 ),
 
 tab2 as (
@@ -57,7 +63,7 @@ tab2 as (
         tab1.source,
         tab1.medium,
         tab1.campaign,
-        cast(tab1.visit_date as date)
+        visit_date
 )
 
 select
