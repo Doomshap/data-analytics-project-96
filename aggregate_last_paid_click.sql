@@ -80,10 +80,11 @@ SELECT
     tab2.revenue
 FROM tab2
 LEFT JOIN tab
-    ON tab2.medium = tab.utm_medium
-    AND tab2.source = tab.utm_source
-    AND tab2.campaign = tab.utm_campaign
-    AND tab2.visit_date = tab.campaign_date
+    ON
+        tab2.medium = tab.utm_medium
+        AND tab2.source = tab.utm_source
+        AND tab2.campaign = tab.utm_campaign
+        AND tab2.visit_date = tab.campaign_date
 WHERE tab2.medium != 'organic'
 ORDER BY
     tab2.revenue DESC NULLS LAST,
