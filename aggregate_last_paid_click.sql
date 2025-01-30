@@ -12,8 +12,9 @@ WITH tab1 AS (
         sessions.campaign
     FROM sessions
     LEFT JOIN leads
-        ON sessions.visitor_id = leads.visitor_id
-        AND sessions.visit_date <= leads.created_at
+    ON
+                sessions.visitor_id = leads.visitor_id
+                AND sessions.visit_date <= leads.created_at
     WHERE sessions.medium != 'organic'
     ORDER BY
         sessions.visitor_id ASC,
