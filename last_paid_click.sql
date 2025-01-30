@@ -18,10 +18,11 @@ WITH tab AS (
     WHERE sessions.medium != 'organic'
 ),
 
- tab2 AS (
+tab2 AS (
     SELECT
         tab.*,
-        ROW_NUMBER() OVER (PARTITION BY tab.visitor_id ORDER BY tab.visit_date DESC) AS rang
+        ROW_NUMBER() OVER
+            (PARTITION BY tab.visitor_id ORDER BY tab.visit_date DESC) AS rang
     FROM tab
     ORDER BY tab.visit_date DESC
 )
