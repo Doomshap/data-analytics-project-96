@@ -1,27 +1,27 @@
 WITH tab1 AS (
-        SELECT DISTINCT ON (sessions.visitor_id)
-                sessions.visitor_id,
-                sessions.visit_date,
-                leads.created_at,
-                leads.status_id,
-                leads.amount,
-                leads.lead_id,
-                leads.closing_reason,
-                sessions.medium,
-                sessions.source,
-                sessions.campaign
-            FROM sessions
-            LEFT JOIN leads
-                ON sessions.visitor_id = leads.visitor_id
-                AND sessions.visit_date <= leads.created_at
-            WHERE sessions.medium != 'organic'
-            ORDER BY
-                sessions.visitor_id ASC,
-                sessions.visit_date DESC
+    SELECT DISTINCT ON (sessions.visitor_id)
+        sessions.visitor_id,
+        sessions.visit_date,
+        leads.created_at,
+        leads.status_id,
+        leads.amount,
+        leads.lead_id,
+        leads.closing_reason,
+        sessions.medium,
+        sessions.source,
+        sessions.campaign
+    FROM sessions
+    LEFT JOIN leads
+        ON sessions.visitor_id = leads.visitor_id
+            AND sessions.visit_date <= leads.created_at
+    WHERE sessions.medium != 'organic'
+    ORDER BY
+        sessions.visitor_id ASC,
+        sessions.visit_date DESC
 ),
-
+        
     tab AS (
-        SELECT
+    SELECT
             utm_source,
             utm_medium,
             utm_campaign,
